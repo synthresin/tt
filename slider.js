@@ -171,7 +171,7 @@ Requireify.register('js/akira/components/slider/slider.jsx', function(require, r
                     o = this.state.lowestVisibleItemIndex - this.getLowestIndex();
                 if (this.props.children && this.props.children.length) {
                     e = this.props.children.slice(this.getLowestIndex(), this.getHighestIndex()), n = this.getHighestIndex() - this.getLowestIndex();
-                    for (var r = 0; e.length < n && e.length < s;) e.push(React.createElement(LoadingTitle, {
+                    for (var r = 0; e.length < n && e.length < s;) e.push(React.createElement(LoadingTitle, { // 요거 최대 갯수는 기록되어있는데, 아직 children 이  fully load 되지 않았을대 임시로 loadingtitle 넣어주는거다.
                         className: "fullWidth",
                         delay: .2 * r,
                         pulsate: !1,
