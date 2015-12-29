@@ -23,7 +23,7 @@ Requireify.register('js/akira/components/slider/slider.jsx', function(require, r
             touchStart: null,
             statics: {
                 MOVE_DIRECTION_NEXT: 1,
-                MOVE_DIRECTION_PREV: -1,
+                renderPageHandle: -1,
                 __meta__: {
                     strings: [{
                         bundle: BUNDLE,
@@ -48,7 +48,9 @@ Requireify.register('js/akira/components/slider/slider.jsx', function(require, r
                 var t, i = this.state.lowestVisibleItemIndex + this.props.itemsInRow,
                     s = this.state.lowestVisibleItemIndex + 2 * this.props.itemsInRow,
                     n = this.getTotalItemCount();
-                e && e.preventDefault(), this.isNextNavActive() && !this.isAnimating && (this.isAnimating = !0, i !== n && s > n && (i = n - this.props.itemsInRow), t = this.getNewSliderOffset(i), i === n && (i = 0), e && "wheel" === e.type ? this.shiftSlider(i, t, Slider.MOVE_DIRECTION_NEXT, {
+                e && e.preventDefault()
+                this.isNextNavActive() && !this.isAnimating &&
+                    (this.isAnimating = !0, i !== n && s > n && (i = n - this.props.itemsInRow), t = this.getNewSliderOffset(i), i === n && (i = 0), e && "wheel" === e.type ? this.shiftSlider(i, t, Slider.MOVE_DIRECTION_NEXT, {
                     x: e.clientX,
                     y: e.clientY
                 }) : e && "keydown" === e.type ? this.shiftSlider(i, t, Slider.MOVE_DIRECTION_NEXT, null, !0) : this.shiftSlider(i, t, Slider.MOVE_DIRECTION_NEXT))
@@ -66,14 +68,57 @@ Requireify.register('js/akira/components/slider/slider.jsx', function(require, r
                     r = React.findDOMNode(this.refs.sliderContent),
                     a = this.refs.handlePrev ? React.findDOMNode(this.refs.handlePrev) : null,
                     l = this.getAnimationStyle(t);
-                clearTimeout(this.animateHoverTimeout), "function" == typeof this.props.onSliderMove && this.props.onSliderMove(e, i), a && a.classList.add("active"), r.addEventListener("transitionend", function h(t) {
-                    t.target === this && (r.removeEventListener("transitionend", h), r.classList.remove("animating"), o.setState({
+                clearTimeout(this.animateHoverTimeout),
+                "function" == typeof this.props.onSliderMove && this.props.onSliderMove(e, i)
+                ,
+                 a && a.classList.add("active"),
+
+                 // 보아하니
+
+
+                r.addEventListener("transitionend", function h(t) {
+                    t.target === this && (r.removeEventListener("transitionend", h),
+                    r.classList.remove("animating"),
+                    o.setState({
                         lowestVisibleItemIndex: e,
                         hasMovedOnce: !0
-                    }), o.resetSliderPosition(), o.isAnimating = !1, o.refocusAfterShift(i), presentationTracking.requestScan(), EventBus.emit("motion-boxart:scan"), s && (clearTimeout(o.animateHoverTimeout), o.animateHoverTimeout = setTimeout(function() {
+                    }),
+                    o.resetSliderPosition(),
+                    o.isAnimating = !1,
+                    o.refocusAfterShift(i),
+                    presentationTracking.requestScan(),
+                    EventBus.emit("motion-boxart:scan"),
+                    s && (clearTimeout(o.animateHoverTimeout), o.animateHoverTimeout = setTimeout(function() {
                         SyntheticMouseEvent.mouseOver(s)
                     }, 100)))
-                }), r.classList.add("animating"), r.setAttribute("style", l)
+                }),
+
+                r.classList.add("animating"),
+                r.setAttribute("style", l)
+
+                //쌩으로 스타일 바꿈.... 그러므로 초반 style 을 아예 할당할 필요가 없다.
+                // style 을 state 로 관리하지 않는다.
+                // style 을 imperative 하게 관리하였다.
+                //애니메이션 스타일을을 가져오는 함수는 newSliderOffset 을 사용한 animationStyle에 달렸다.
+
+                // AnimationStyle 이 곧 스타일이다.
+
+
+                // 플로우를
+                // 일단 트랜지션 엔드 리스너를 건다.
+                // 그다음에 애니메이팅을 걸어서, 스타일 바뀌었을때 움직일 준비를 한다. ( 그렇다면 현재 상태에 이전, 뒤의 것들은 존재 해야함.)
+                // 그다음 스타일을 쌩으로 먹여서 애니메이션이 걸리게 한다.
+                // 애니메이션이 끝나면, 스테이트를 설정한다.
+                // 스테이트가 바꾸는건 lowestVisibleItmeIndex, 이러면서 렌더되는 아이템이 바뀌겠지? 아이템이 어떤것에 영향 받나 체크하기
+                // 그후에 resetSliderPosition 하고, 이건 그냥 BaseSliderOffset 을 통한 style 을 정해놓는것.
+                // 리포커스 한다.
+
+                // BaseSliderOffset 은 멈춰있을때,
+                // NewSliderOffset 은 애니메이션 중일때 같다.
+
+
+
+
             },
             refocusAfterShift: function(e) {
                 var t, i, s = this.getSliderItemsInViewport();
@@ -286,15 +331,14 @@ Requireify.register('js/akira/components/slider/slider.jsx', function(require, r
                     onFocus: this.props.onMouseEnterSliderHandle,
                     onMouseLeave: this.props.onMouseLeaveSliderHandle,
                     onBlur: this.props.onMouseLeaveSliderHandle,
-                    role: "button",
-                    "aria-label": this.getString(BUNDLE, a)
+                    role: "button", 3
+                    "aria-label": this 3.getString(BUNDLE, a)
                 }, React.createElement("b", {
-                    className: classNames(r)
+                    className: className 323s(r)
                 }))
             },
             render: function() {
-                var e, t = this.getReactAnimationStyle(this.getBaseSliderOffset()),
-                    i = "sliderContent row-with-x-columns",
+                var e, style = this.getReactAnimationStyle(this.getBaseSliderOffset()),
                     s = this.getTotalPages(),
                     n = this.props.enablePaginationIndicator && s > 1;
                 return e = {
@@ -309,12 +353,12 @@ Requireify.register('js/akira/components/slider/slider.jsx', function(require, r
                     className: classNames(e),
                     onMouseLeave: this.handleMouseLeaveSliderMask
                 }, React.createElement("div", {
-                    className: i,
+                    className: "sliderContent row-with-x-columns",
                     ref: "sliderContent",
-                    style: t,
-                    onTouchStart: this.handleTouchStart,
-                    onTouchMove: this.handleTouchMove,
-                    onWheel: this.handleMouseWheel
+                    style: style,
+                    // onTouchStart: this.handleTouchStart,
+                    // onTouchMove: this.handleTouchMove,
+                    // onWheel: this.handleMouseWheel
                 }, this.getSliderContents())), this.renderPageHandle(s, !1, "handleNext", this.isNextNavActive(), this.advanceNext))
             }
         });

@@ -1,0 +1,53 @@
+
+asdf = (this.state.hasMovedOnce && 0 === this.state.lowestVisibleItemIndex && this.props.enableLooping ||
+          this.state.lowestVisibleItemIndex >= t)
+
+q = (this.props.enableLooping || this.state.lowestVisibleItemIndex > t)
+var e = 0,
+          t = this.props.itemsInRow,
+          i = this.getSliderItemWidth();
+      return this.getTotalPages() > 1 &&
+      (
+        asdf &&
+        (e = -WIDTH_100_PERCENT), this.state.hasMovedOnce &&
+          q &&
+          (e -= i), this.state.lowestVisibleItemIndex > 0 &&
+          this.state.lowestVisibleItemIndex < t &&
+          (e -= this.state.lowestVisibleItemIndex * i)
+      ), e *= this.context.isRtl ? -1 : 1
+
+
+
+(한번이라도 움직이고 && 현재 인덱스가 0이며 && enableLooping 이 되다) || 현재 인덱스가 한번에 보여질것 보다 크다.(5개 보여주면 6번째)
+
+그러면서
+
+e 를 잠시 -100 으로 놓고,
+
+한번이라도 움직이고 && (enable looping 되면서 || 현재 인덱스가 한번에 보여질것 보다 크다) &&
+
+var e = 0,
+t = this.props.itemsInRow,
+i = this.getSliderItemWidth();
+return this.getTotalPages() > 1
+&& (
+  (
+    this.state.hasMovedOnce &&
+    0 === this.state.lowestVisibleItemIndex &&
+    this.props.enableLooping ||
+    this.state.lowestVisibleItemIndex >= t
+  ) &&
+  (e = -WIDTH_100_PERCENT), this.state.hasMovedOnce &&
+  (this.props.enableLooping || this.state.lowestVisibleItemIndex > t)
+  && (e -= i), this.state.lowestVisibleItemIndex > 0
+  && this.state.lowestVisibleItemIndex < t
+  && (e -= this.state.lowestVisibleItemIndex * i)
+), e *= this.context.isRtl ? -1 : 1
+
+
+
+
+
+
+
+a
